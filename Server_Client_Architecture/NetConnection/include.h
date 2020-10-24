@@ -19,3 +19,10 @@
 #include <asio.hpp>
 #include <asio/ts/buffer.hpp>
 #include <asio/ts/internet.hpp>
+
+// Framework specific
+#include "client.h"
+#include "server.h"
+#include "connection.h"
+#include "Message.h"
+#include "tsQueue.h"

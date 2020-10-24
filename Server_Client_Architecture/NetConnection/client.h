@@ -1,6 +1,5 @@
 #pragma once
 #include "include.h"
-#include "connection.h"
 #include "tsQueue.h"
 #include "Message.h"
 
@@ -44,8 +43,8 @@ namespace net
 			}
 			catch (std::exception& e)
 			{
-				std::cerr << "Client exception: " << e.what() << "\n"
-					return false;
+				std::cerr << "Client exception: " << e.what() << "\n";
+				return false;
 			}
 			return true;
 		}

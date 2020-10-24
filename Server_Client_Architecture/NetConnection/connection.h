@@ -1,7 +1,5 @@
 #pragma once
 #include "include.h"
-#include "Message.h"
-#include "tsQueue.h"
 
 namespace net
 {
@@ -85,7 +83,7 @@ namespace net
 	public:
 		// Posts a function to the context that checks, if we are currently already writing and sending a message,
 		// and if not, it starts writing and sending it. Otherwise it saves it for later.
-		bool Send(const sMessage<T>& message)
+		void Send(const sMessage<T>& message)
 		{
 			asio::post(m_asioContext,
 				[this, message]()
@@ -131,7 +129,7 @@ namespace net
 		// Starts asynchronously reading a body. We just add it to message queue.
 		void ReadBody()
 		{
-			asio::async_read(m_socket, asio::buffer(&m_msgTemporaryIn.body.data(), m_msgTemporaryIn.body.size()),
+			asio::async_read(m_socket, asio::buffer(m_msgTemporaryIn.body.data(), m_msgTemporaryIn.body.size()),
 				[this](std::error_code ec, std::size_t length)
 				{
 					if (!ec)
@@ -143,14 +141,14 @@ namespace net
 						std::cout << " Read body fail!\n";
 						m_socket.close();
 					}
-				}
+				});
 		}
 
 		// Starts assynchronously writing a Header of a first message in temporary message out queue, if the body of message
 		// is bigger than 0, we start writing a body. Otherwise we register another job to write header of the next message.
 		void WriteHeader()
 		{
-			asio::async_write(m_socket, asio::buffer(&m_msgTemporaryOut.front().header, sizeof(sMessageHeader<T>)),
+			asio::async_write(m_socket, asio::buffer(&m_qMessagesOut.front().header, sizeof(sMessageHeader<T>)),
 				[this](std::error_code ec, std::size_t length)
 				{
 					if (!ec)
@@ -163,7 +161,7 @@ namespace net
 						{
 							m_qMessagesOut.pop_front();
 
-							if (!m_qMessagesOut.epmty())
+							if (!m_qMessagesOut.empty())
 							{
 								WriteHeader();
 							}
@@ -174,13 +172,13 @@ namespace net
 						std::cout << " Write Header fail!\n";
 						m_socket.close();
 					}
-				}
+				});
 		}
 		// Starts asynchronously writing a body. If the Message out queue is not empty after the body is sent, we
 		// register another WriteHeader() to start writing messages left.
 		void WriteBody()
 		{
-			asio::async_write(m_socket, asio::buffer(&m_qMessagesOut.front().body.data(), m_qMessagesOut.body.size()),
+			asio::async_write(m_socket, asio::buffer(m_qMessagesOut.front().body.data(), m_qMessagesOut.front().body.size()),
 				[this](std::error_code ec, std::size_t length)
 				{
 					if (!ec)
@@ -197,7 +195,7 @@ namespace net
 						std::cout << " Write body fail!\n";
 						m_socket.close();
 					}
-				}
+				});
 		}
 		// Adds the newly read message to appropriate containers.
 		void AddToIncomingMessageQueue()
@@ -205,10 +203,17 @@ namespace net
 			// If I am a server...
 			if (m_nOwnerType == owner::server)
 				// Then put this message in a ownedMessage container with a unique ptr to myself.
+			{
+				//sOwnedMessage<T> temp = { this->shared_from_this(), m_msgTemporaryIn };
 				m_qMessagesIn.push_back({ this->shared_from_this(), m_msgTemporaryIn });
+			}
+
 			else
 				// Do not assign my pointer to this message
+			{
+				//sOwnedMessage<T> temp = { nullptr, m_msgTemporaryIn };
 				m_qMessagesIn.push_back({ nullptr, m_msgTemporaryIn });
+			}
 
 			// Prime the context with the next header to read.
 			ReadHeader();
@@ -226,7 +231,7 @@ namespace net
 		// This reference is passed in the constructor by the owner, so owner has this queue on him.
 		// server propagates only 1 queue to its connections, so this is shared among them.
 		// client propagates only 1 also, but clients are unique and each client owns its connection.
-		TsQueue<sOwnedMessage>& m_qMessagesIn;
+		TsQueue<sOwnedMessage<T>>& m_qMessagesIn;
 		sMessage<T> m_msgTemporaryIn;
 		// Definition of an owner of this connection object
 		owner m_nOwnerType = owner::server;

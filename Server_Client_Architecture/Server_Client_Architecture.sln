@@ -3,13 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Threads", "Threads\Threads.vcxproj", "{DC4690E5-B9E4-4E76-93E5-46EC10F81DFA}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetConnection", "NetConnection\NetConnection.vcxproj", "{403F61FE-9EAF-40B2-BB3A-6139DF5BF5EF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Server\Server.vcxproj", "{973ECCBC-4DD4-427E-A5DA-D44551D7F947}"
+	ProjectSection(ProjectDependencies) = postProject
+		{403F61FE-9EAF-40B2-BB3A-6139DF5BF5EF} = {403F61FE-9EAF-40B2-BB3A-6139DF5BF5EF}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Client.vcxproj", "{39641120-BD59-4F49-A9CE-57AC888DB026}"
+	ProjectSection(ProjectDependencies) = postProject
+		{403F61FE-9EAF-40B2-BB3A-6139DF5BF5EF} = {403F61FE-9EAF-40B2-BB3A-6139DF5BF5EF}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +23,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DC4690E5-B9E4-4E76-93E5-46EC10F81DFA}.Debug|x64.ActiveCfg = Debug|x64
-		{DC4690E5-B9E4-4E76-93E5-46EC10F81DFA}.Debug|x64.Build.0 = Debug|x64
-		{DC4690E5-B9E4-4E76-93E5-46EC10F81DFA}.Debug|x86.ActiveCfg = Debug|Win32
-		{DC4690E5-B9E4-4E76-93E5-46EC10F81DFA}.Debug|x86.Build.0 = Debug|Win32
-		{DC4690E5-B9E4-4E76-93E5-46EC10F81DFA}.Release|x64.ActiveCfg = Release|x64
-		{DC4690E5-B9E4-4E76-93E5-46EC10F81DFA}.Release|x64.Build.0 = Release|x64
-		{DC4690E5-B9E4-4E76-93E5-46EC10F81DFA}.Release|x86.ActiveCfg = Release|Win32
-		{DC4690E5-B9E4-4E76-93E5-46EC10F81DFA}.Release|x86.Build.0 = Release|Win32
 		{403F61FE-9EAF-40B2-BB3A-6139DF5BF5EF}.Debug|x64.ActiveCfg = Debug|x64
 		{403F61FE-9EAF-40B2-BB3A-6139DF5BF5EF}.Debug|x64.Build.0 = Debug|x64
 		{403F61FE-9EAF-40B2-BB3A-6139DF5BF5EF}.Debug|x86.ActiveCfg = Debug|Win32

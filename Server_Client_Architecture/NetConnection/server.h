@@ -1,8 +1,5 @@
 #pragma once
 #include "include.h"
-#include "connection.h"
-#include "tsQueue.h"
-#include "Message.h"
 
 namespace net
 {
@@ -35,8 +32,8 @@ namespace net
 			}
 			catch (std::exception e)
 			{
-				std::cerr << "Server exception: " << e.what() << "\n"
-					return false;
+				std::cerr << "Server exception: " << e.what() << "\n";
+				return false;
 			}
 
 			std::cout << "Server started!\n";
@@ -118,7 +115,6 @@ namespace net
 				client.reset();
 				m_deqConnections.erase(
 					std::remove(m_deqConnections.begin(), m_deqConnections.end(), client), m_deqConnections.end());
-				)
 			}
 		}
 
@@ -163,8 +159,9 @@ namespace net
 		virtual void OnClientDisconnect(std::shared_ptr<connection<T>> client)
 		{
 		}
-
+	public:
 		/// <summary>
+		/// This function is called in a loop from your Main() function to keep server running.
 		/// Goes through all the obtained messages, calls their respective handler.
 		/// Meant to be used from the outside.
 		/// </summary>
@@ -181,6 +178,7 @@ namespace net
 				nMessagecount++;
 			}
 		}
+	protected:
 		// Do something for specific message when Update() is called on all of them.
 		virtual void OnMessage(std::shared_ptr<connection<T>> client, sMessage<T>& message)
 		{

@@ -3,6 +3,10 @@
 
 namespace net
 {
+	// predeclaration
+	template <typename T>
+	class connection;
+
 	// Templated header for a typical message. Will need to be passed in a tape of the message
 	// Contains the ID and size in bytes
 	template <typename T>
@@ -22,7 +26,7 @@ namespace net
 		// returns size of a message including header and body.
 		size_t size() const
 		{
-			return sizeof(sMessageHeader<T> +body.size());
+			return sizeof(sMessageHeader<T>) + body.size();
 		}
 
 		// Overloaded operator used to put Trivial data types into the message buffer
@@ -35,7 +39,7 @@ namespace net
 
 			std::memcpy(msg.body.data() + i, &data, sizeof(DataType));
 
-			msg.header.size() = msg.size();
+			msg.header.size = msg.size();
 
 			return msg;
 		}
@@ -61,7 +65,7 @@ namespace net
 	template <typename T>
 	struct sOwnedMessage
 	{
-		std::unique_ptr<connection<T>> remote = nullptr;
+		std::shared_ptr<connection<T>> remote = nullptr;
 		sMessage<T> message;
 	};
 }
